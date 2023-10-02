@@ -14,6 +14,10 @@ type Config struct {
 	dbname   string
 }
 
+const (
+	userTable = "user"
+)
+
 func NewConfig(host string, port string, user string, password string, dbname string) *Config {
 	return &Config{
 		host:     host,

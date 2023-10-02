@@ -10,7 +10,7 @@ import (
 	"github.com/Murolando/default_rest_arch/pkg/repository/postgres"
 	"github.com/Murolando/default_rest_arch/pkg/service"
 
-	"github.com/Murolando/default_rest_arch"
+	srv "github.com/Murolando/default_rest_arch"
 )
 
 func main() {

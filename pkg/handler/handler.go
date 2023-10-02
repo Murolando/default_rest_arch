@@ -22,6 +22,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	// router.Static("/storage","./storage")
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
 	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	
+	api:= router.Group("/api")
+	{
+		auth := api.Group("/auth")
+		{
+			auth.POST("/sign-up",h.signUp)
+			auth.POST("/sign-in",h.signIn)
+			auth.GET("/refresh/:refresh",h.newRefresh)
+		}
+	}
 	return router
 }
