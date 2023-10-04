@@ -7,10 +7,10 @@ import (
 )
 
 type Auth interface {
-	SignUp(user ent.User) (int, error)
-	GetUserByLoginAndPassword(mail *string, password *string) (int, error)
-	SetSession(user int, refresh string, expiredAt string) error
-	GetByRefreshToken(refresh string) (int, error)
+	SignUp(user ent.User) (int64, error)
+	GetUserByLoginAndPassword(mail *string, password *string) (int64, error)
+	SetSession(user int64, refresh string, expiredAt string) error
+	GetByRefreshToken(refresh string) (int64, error)
 }
 
 type Repository struct {

@@ -19,8 +19,8 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 	}
 }
 
-func (r *AuthPostgres) SignUp(user ent.User) (int, error) {
-	var id int
+func (r *AuthPostgres) SignUp(user ent.User) (int64, error) {
+	var id int64
 	t := time.Now()
 	dateTime := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d\n",
 		t.Year(), t.Month(), t.Day(),
@@ -38,8 +38,8 @@ func (r *AuthPostgres) SignUp(user ent.User) (int, error) {
 	return id, nil
 }
 
-func (r AuthPostgres) GetUserByLoginAndPassword(mail *string, password *string) (int, error) {
-	var id int
+func (r AuthPostgres) GetUserByLoginAndPassword(mail *string, password *string) (int64, error) {
+	var id int64
 	query := fmt.Sprintf(`SELECT id FROM "%s" WHERE login = $1`, userTable)
 	row := r.db.QueryRow(query, mail)
 	if err := row.Scan(&id); err != nil {
@@ -53,7 +53,7 @@ func (r AuthPostgres) GetUserByLoginAndPassword(mail *string, password *string) 
 	return id, nil
 }
 
-func (r AuthPostgres) SetSession(userId int, refresh string, expiredAt string) error {
+func (r AuthPostgres) SetSession(userId int64, refresh string, expiredAt string) error {
 	var id int
 	query := fmt.Sprintf(`
 	UPDATE "%s" SET refresh = $1,expiredAt =$2
@@ -66,8 +66,8 @@ func (r AuthPostgres) SetSession(userId int, refresh string, expiredAt string) e
 	return nil
 }
 
-func (r AuthPostgres) GetByRefreshToken(refresh string) (int, error) {
-	var id int
+func (r AuthPostgres) GetByRefreshToken(refresh string) (int64, error) {
+	var id int64
 	var expiredAt time.Time
 	query := fmt.Sprintf(`SELECT id,expiredAt FROM "%s" WHERE refresh = $1`, userTable)
 	row := r.db.QueryRow(query, refresh)

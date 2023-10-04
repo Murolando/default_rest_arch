@@ -27,7 +27,7 @@ func NewAuthService(repo *repository.Repository) *AuthService {
 		repo: repo,
 	}
 }
-func (s AuthService) SignIn(mail *string, password *string) (int, error) {
+func (s AuthService) SignIn(mail *string, password *string) (int64, error) {
 	pass := s.generateHashPassword(password)
 	id, err := s.repo.GetUserByLoginAndPassword(mail, &pass)
 	if err != nil {
@@ -49,7 +49,11 @@ func (s *AuthService) SignUp(user ent.User) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return map[string]interface{}{"token": token}, nil
+	refresh,err := s.NewRefreshToken(id)
+	if err != nil{
+		return nil,err
+	}
+	return map[string]interface{}{"token": token,"refresh":refresh}, nil
 }
 
 // Для генерации  хэша пароля
@@ -60,12 +64,12 @@ func (s *AuthService) generateHashPassword(password *string) string {
 }
 
 // Для генерации jwt токена
-func (s *AuthService) GenerateToken(id int) (string, error) {
+func (s *AuthService) GenerateToken(id int64) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(15 * time.Minute).Unix(),
 			IssuedAt:  time.Now().Unix(),
-			Subject:   strconv.Itoa(id),
+			Subject:   strconv.FormatInt(id, 10),
 		},
 	})
 	str, err := token.SignedString([]byte(os.Getenv("SIGNINKEY")))
@@ -73,7 +77,7 @@ func (s *AuthService) GenerateToken(id int) (string, error) {
 }
 
 // Распарсивает jwt токен, для проверки его валидности
-func (s *AuthService) ParseToken(accesstoken string) (int, error) {
+func (s *AuthService) ParseToken(accesstoken string) (int64, error) {
 	token, err := jwt.ParseWithClaims(accesstoken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("invalid string method")
@@ -84,7 +88,7 @@ func (s *AuthService) ParseToken(accesstoken string) (int, error) {
 		return 0, err
 	}
 	if claims, ok := token.Claims.(*tokenClaims); ok && token.Valid {
-		id, err := strconv.Atoi(claims.Subject)
+		id, err := strconv.ParseInt(claims.Subject, 10, 64)
 		if err != nil {
 			return 0, errors.New("Troubles with convert string to int")
 		}
@@ -94,7 +98,7 @@ func (s *AuthService) ParseToken(accesstoken string) (int, error) {
 }
 
 // create refresh token
-func (s *AuthService) NewRefreshToken(id int) (string, error) {
+func (s *AuthService) NewRefreshToken(id int64) (string, error) {
 	b := make([]byte, 32)
 
 	st := rand.NewSource(time.Now().Unix())
@@ -115,7 +119,7 @@ func (s *AuthService) NewRefreshToken(id int) (string, error) {
 }
 
 // get userId by Refresh
-func (s *AuthService) GetByRefreshToken(refresh string) (int, error) {
+func (s *AuthService) GetByRefreshToken(refresh string) (int64, error) {
 	id, err := s.repo.GetByRefreshToken(refresh)
 	if err != nil {
 		return 0, nil

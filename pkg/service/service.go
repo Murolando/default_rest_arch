@@ -6,12 +6,12 @@ import (
 )
 
 type Auth interface {
-	SignIn(mail *string, password *string) (int, error)
+	SignIn(mail *string, password *string) (int64, error)
 	SignUp(user ent.User) (map[string]interface{}, error)
-	GenerateToken(id int) (string, error)
-	ParseToken(accesstoken string) (int, error)
-	NewRefreshToken(id int) (string, error)
-	GetByRefreshToken(refresh string) (int, error)
+	GenerateToken(id int64) (string, error)
+	ParseToken(accesstoken string) (int64, error)
+	NewRefreshToken(id int64) (string, error)
+	GetByRefreshToken(refresh string) (int64, error)
 }
 
 type Service struct {
