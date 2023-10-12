@@ -8,8 +8,7 @@ go get github.com/jmoiron/sqlx
 
 go get github.com/lib/pq
 
-
-//swagger
+### swagger
 go get github.com/swaggo
 
 github.com/swaggo/swag/cmd/swag
