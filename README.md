@@ -11,8 +11,8 @@ go get github.com/lib/pq
 ### swagger
 go get github.com/swaggo
 
-go get github.com/swaggo/swag/cmd/swag
+github.com/swaggo/swag/cmd/swag
 
-go get github.com/swaggo/files
+github.com/swaggo/files
 
-go get github.com/swaggo/gin-swagger
+github.com/swaggo/gin-swagger
