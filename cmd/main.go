@@ -9,12 +9,17 @@ import (
 	"github.com/Murolando/default_rest_arch/pkg/repository"
 	"github.com/Murolando/default_rest_arch/pkg/repository/postgres"
 	"github.com/Murolando/default_rest_arch/pkg/service"
+	"github.com/joho/godotenv"
 
 	srv "github.com/Murolando/default_rest_arch"
 )
 
 func main() {
+	//init .env
+	if err := godotenv.Load(); err != nil {
 
+		return
+	}
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
