@@ -1,5 +1,15 @@
 package handler
 
+import (
+	"net/http"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+)
+
+const (
+	authHeader = "Authorization"
+)
 
 func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader(authHeader)
