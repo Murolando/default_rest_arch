@@ -1,5 +1,6 @@
-# default_rest_arch
+# Дефолтный каркас для REST API монолитных приложений на чистой архитектуре с использованием go gin
 
+# Дефолтные зависимости
 go get github.com/gin-gonic/gin
 
 go get github.com/dgrijalva/jwt-go
